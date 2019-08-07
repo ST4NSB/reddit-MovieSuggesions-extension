@@ -1,4 +1,3 @@
-const apiKey = 'beefda61'; 
 let posts = document.getElementsByClassName('sitetable nestedlisting')[0];
 createImdbLinks();
 
@@ -16,6 +15,7 @@ function createImdbLinks() {
 }
 
 function clearParagraph(paragraph, classIndex, tagIndex) {
+	const apiKey = 'beefda61'; 
 	let searchString = 'https://www.omdbapi.com/?apikey=';
 	searchString += apiKey;
 	searchString += '&t='; // title of the movie
@@ -32,7 +32,7 @@ function clearParagraph(paragraph, classIndex, tagIndex) {
 }
 
 function hasSeparator(paragraphChar) {
-	const separators = "([-/?—"; 
+	const separators = '([-/?—'; 
 	return separators.includes(paragraphChar);
 }
 
@@ -42,7 +42,7 @@ async function fetchAsync (url, classIndex, tagIndex) {
 		data: data,
 		status: response.status
 	}) ).then(res => {
-		if(res.data.Response == "False") return;
+		if(res.data.Response == 'False') return;
 		let imdbLink = res.data.imdbID;
 		createLink(imdbLink, classIndex, tagIndex);
 	});
@@ -50,10 +50,12 @@ async function fetchAsync (url, classIndex, tagIndex) {
 
 function createLink(link, classIndex, tagIndex) {
 	let a = document.createElement('a');
-	let linkText = document.createTextNode(" (IMDb)");
+	let linkText = document.createTextNode('IMDb');
 	a.appendChild(linkText);
 	let imdblink = 'https://www.imdb.com/title/';
 	imdblink += link;
 	a.href = imdblink;
+	a.className  = 'imdb_link';
+	a.target = '_blank';
 	posts.getElementsByClassName('md')[classIndex].getElementsByTagName('p')[tagIndex].appendChild(a);
 }
