@@ -32,7 +32,7 @@ function clearParagraph(paragraph, classIndex, tagIndex) {
 }
 
 function hasSeparator(paragraphChar) {
-	const separators = "(["; 
+	const separators = "([-"; 
 	return separators.includes(paragraphChar);
 }
 

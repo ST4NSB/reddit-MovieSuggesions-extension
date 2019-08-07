@@ -1,13 +1,14 @@
 {
-  "manifest_version": 2,
-  "name": "/r/MovieSuggestions - Movies Embedding",
-  "permissions": ["tabs", "*://*.reddit.com/r/MovieSuggestions/comments/**"],
-  "description": "Useful to recognize links in the MovieSuggestions sub-reddit and create a hyperlink to their IMDb page",
-  "version": "1.0",
-  "content_scripts": [
-    {
-      "matches": ["*://*.reddit.com/r/MovieSuggestions/comments/*"],
-      "js": ["content.js"]
-    }
-  ]
+	"manifest_version": 2,
+	"name": "/r/MovieSuggestions - Movies Embedding",
+	"author": "ST4NSB",
+	"permissions": ["tabs", "*://*.reddit.com/r/MovieSuggestions/comments/**"],
+	"description": "Useful to recognize links in the MovieSuggestions sub-reddit and create a hyperlink to their IMDb page",
+	"version": "1.0",
+	"content_scripts": [
+	  {
+		"matches": ["*://*.reddit.com/r/MovieSuggestions/comments/*"],
+		"js": ["index.js"]
+	  }
+	]
 }
