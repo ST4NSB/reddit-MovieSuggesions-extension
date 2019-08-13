@@ -29,27 +29,51 @@ function checkTitleListTag(postComment, postCommentIndex) {
 }
 
 
+
+
 function clearParagraph(paragraph, tagName, classIndex, tagIndex) {
 	const apiKey = 'beefda61'; 
 	let searchString = 'https://www.omdbapi.com/?apikey=';
 	searchString += apiKey;
 	searchString += '&t='; // title of the movie
 	
-	let movie = '';
-	for(let i = 0; i < paragraph.length; i++) {
-		if(hasSeparator(paragraph[i]))
-			break;
-		movie += paragraph[i];
-	}
+	let movieTitle = removeAfterSeparators(paragraph);
+	movieTitle = checkQuotationMarks(movieTitle);
 	
-	searchString += movie;
+	searchString += movieTitle;	
 	fetchAsync(searchString, tagName, classIndex, tagIndex);
 }
 
+function removeAfterSeparators(paragraph) {
+	let movieTitle = '';
+	for(let i = 0; i < paragraph.length; i++) {
+		if(hasSeparator(paragraph[i]))
+			break;
+		movieTitle += paragraph[i];
+	}
+	return movieTitle;
+}
+
 function hasSeparator(paragraphChar) {
-	const separators = '([-/?—'; 
+	const separators = '([-/?—.;'; 
 	return separators.includes(paragraphChar);
 }
+
+function checkQuotationMarks(title) {
+	let movieTitle = '', found = false;
+	for(let i = 0; i < title.length; i++) {
+		if(found)
+			movieTitle += title[i];
+		if(title[i] == '\"' && found) 
+			return movieTitle;
+		if(title[i] == '\"' && !found) 
+			found = true;
+	}
+	return title;
+}
+
+
+
 
 async function fetchAsync (url, tagName, classIndex, tagIndex) {
 	let response = await fetch(url);
