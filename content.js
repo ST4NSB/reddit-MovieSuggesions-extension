@@ -33,16 +33,42 @@ function checkTitleListTag(postComment, postCommentIndex) {
 
 function clearParagraph(paragraph, tagName, classIndex, tagIndex) {
 	const apiKey = 'beefda61'; 
-	let searchString = 'https://www.omdbapi.com/?apikey=';
-	searchString += apiKey;
-	searchString += '&t='; // title of the movie
 	
-	let movieTitle = removeAfterSeparators(paragraph);
-	movieTitle = checkQuotationMarks(movieTitle);
-	
-	searchString += movieTitle;	
-	fetchAsync(searchString, tagName, classIndex, tagIndex);
+	let wordsArray = createWordsArrayFromSeparators(paragraph);
+	wordsArray.forEach(function(sentence) {
+		let searchString = 'https://www.omdbapi.com/?apikey=';
+		searchString += apiKey;
+		searchString += '&t='; // title of the movie
+		
+		let movieTitle = removeAfterSeparators(sentence);
+		movieTitle = checkQuotationMarks(movieTitle);
+		
+		searchString += movieTitle;	
+		fetchAsync(searchString, tagName, classIndex, tagIndex);
+	});
 }
+
+function createWordsArrayFromSeparators(paragraph) {
+	let words = [];
+	let word = '';
+	for(let i = 0; i < paragraph.length; i++) {
+		if(hasSentenceSeparator(paragraph[i])) {
+			words.push(word);
+			word = '';
+		}
+		else 
+			word += paragraph[i];
+	}
+	if(word != '')
+		words.push(word);
+	return words;
+}
+
+function hasSentenceSeparator(paragraphChar) {
+	const separators = '\n\t'; 
+	return separators.includes(paragraphChar);
+}
+
 
 function removeAfterSeparators(paragraph) {
 	let movieTitle = '';
@@ -55,24 +81,27 @@ function removeAfterSeparators(paragraph) {
 }
 
 function hasSeparator(paragraphChar) {
-	const separators = '([-/?—.;'; 
+	const separators = '([-/?—;~<>'; 
 	return separators.includes(paragraphChar);
 }
 
 function checkQuotationMarks(title) {
-	let movieTitle = '', found = false;
+	let movieTitle = '', quotationSignFound = false;
 	for(let i = 0; i < title.length; i++) {
-		if(found)
+		if(quotationSignFound)
 			movieTitle += title[i];
-		if(title[i] == '\"' && found) 
+		if(isQuotationMark(title[i]) && quotationSignFound) 
 			return movieTitle;
-		if(title[i] == '\"' && !found) 
-			found = true;
+		if(isQuotationMark(title[i]) && !quotationSignFound) 
+			quotationSignFound = true;
 	}
 	return title;
 }
 
-
+function isQuotationMark(titleChar) {
+	const quotation = '\`\"';
+	return quotation.includes(titleChar);
+}
 
 
 async function fetchAsync (url, tagName, classIndex, tagIndex) {
