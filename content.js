@@ -43,7 +43,7 @@ function clearParagraph(paragraph, tagName, classIndex, tagIndex) {
 		let movieTitle = removeAfterSeparators(sentence);
 		movieTitle = checkQuotationMarks(movieTitle);
 		
-		searchString += movieTitle;	
+		searchString += movieTitle;
 		fetchAsync(searchString, tagName, classIndex, tagIndex);
 	});
 }
@@ -99,7 +99,7 @@ function checkQuotationMarks(title) {
 }
 
 function isQuotationMark(titleChar) {
-	const quotation = '\`\"';
+	const quotation = '\`\"\“\”';
 	return quotation.includes(titleChar);
 }
 
@@ -111,6 +111,7 @@ async function fetchAsync (url, tagName, classIndex, tagIndex) {
 		status: response.status
 	}) ).then(res => {
 		if(res.data.Response == 'False') return;
+		if(res.data.imdbVotes < 200) return;
 		let imdbLink = res.data.imdbID;
 		createLink(imdbLink, tagName, classIndex, tagIndex);
 	});
