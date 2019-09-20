@@ -36,6 +36,7 @@ function clearParagraph(paragraph, tagName, classIndex, tagIndex) {
 	
 	let wordsArray = createWordsArrayFromSeparators(paragraph);
 	wordsArray.forEach(function(sentence) {
+		console.log(sentence);
 		let searchString = 'https://www.omdbapi.com/?apikey=';
 		searchString += apiKey;
 		searchString += '&t='; // title of the movie
@@ -65,7 +66,7 @@ function createWordsArrayFromSeparators(paragraph) {
 }
 
 function hasSentenceSeparator(paragraphChar) {
-	const separators = '\n\t'; 
+	const separators = '\n\t,'; 
 	return separators.includes(paragraphChar);
 }
 
