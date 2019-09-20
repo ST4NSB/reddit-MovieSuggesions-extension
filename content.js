@@ -56,6 +56,8 @@ function createWordsArrayFromSeparators(paragraph) {
 		if(hasSentenceSeparator(paragraph[i])) {
 			words.push(word);
 			word = '';
+			if(paragraph[i + 1] === ' ')
+				i++;
 		}
 		else 
 			word += paragraph[i];
