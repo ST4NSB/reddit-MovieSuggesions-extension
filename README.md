@@ -10,8 +10,8 @@ Uses **OMDb API** to link the iMDb movie titles
 ![image example with extension](images/with_extension.png)
 
 # Development progress
-+ [x] works for paragraphs tag <p>..</p>
-+ [x] works for lists <li>..</li>
++ [x] works for html paragraphs tag (p)
++ [x] works for html list items tag (li)
 + [x] separates movie title in Quotation mark (`".."`) from other texts
 + [x] creates multiple links for every movie separated by new line(\n), horizontal space(\t) and comma (,)
 + [x] separates movie title from other text when a character of this kind (([-/?—;~<>) is found
