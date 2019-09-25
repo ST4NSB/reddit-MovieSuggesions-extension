@@ -17,4 +17,4 @@ Uses **OMDb API** to link the iMDb movie titles
 + [x] separates movie title from other text when a character of this kind **([-/?—;~<>** is found
 + [x] doesn't link movies with a score < 200 of audience vote
 
-**! ONLY works for the old reddit theme (old.reddit.com)**
+**!! ONLY works for the old reddit theme (old.reddit.com)**
