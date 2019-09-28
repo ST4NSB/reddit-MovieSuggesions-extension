@@ -7,8 +7,22 @@ function createImdbLinks() {
 	let postsLength = posts.getElementsByClassName('md').length;
 	for(let i = 0; i < postsLength; i++) {
 		let comment = posts.getElementsByClassName('md')[i]; // reply post div class
-		checkTitleParagraphTag(comment, i);
-		checkTitleListTag(comment, i);
+		checkTitleListTag(comment, i); // check in <li>..</li>
+		checkTitleParagraphTag(comment, i); // check in <p>..</p>
+	}
+}
+
+function checkTitleListTag(postComment, postCommentIndex) {
+	let postCommentLength = postComment.getElementsByTagName('li').length;
+	for(let i = 0; i < postCommentLength; i++) {
+		let liChild = postComment.getElementsByTagName('li')[i];
+	
+		if(liChild.firstChild.nodeType == Node.TEXT_NODE) {
+			let listItem = postComment.getElementsByTagName('li')[i].textContent;
+			//console.log(listItem);
+			clearParagraph(listItem, 'li', postCommentIndex, i);	
+		}
+		
 	}
 }
 
@@ -16,17 +30,12 @@ function checkTitleParagraphTag(postComment, postCommentIndex) {
 	let postCommentLength = postComment.getElementsByTagName('p').length;
 	for(let i = 0; i < postCommentLength; i++) {
 		let paragraph = postComment.getElementsByTagName('p')[i].textContent;
+		//console.log(paragraph);
 		clearParagraph(paragraph, 'p', postCommentIndex, i);	
 	}
 }
 
-function checkTitleListTag(postComment, postCommentIndex) {
-	let postCommentLength = postComment.getElementsByTagName('li').length;
-	for(let i = 0; i < postCommentLength; i++) {
-		let listItem = postComment.getElementsByTagName('li')[i].textContent;
-		clearParagraph(listItem, 'li', postCommentIndex, i);	
-	}
-}
+
 
 
 
@@ -68,7 +77,7 @@ function createWordsArrayFromSeparators(paragraph) {
 }
 
 function hasSentenceSeparator(paragraphChar) {
-	const separators = '\n\t,'; 
+	const separators = '\n\t,.'; 
 	return separators.includes(paragraphChar);
 }
 
@@ -86,7 +95,7 @@ function removeAfterSeparators(paragraph) {
 }
 
 function hasSeparator(paragraphChar) {
-	const separators = '([-/?—;~<>'; 
+	const separators = '([-/?—;~<>.'; 
 	return separators.includes(paragraphChar);
 }
 
