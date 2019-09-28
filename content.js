@@ -76,6 +76,8 @@ function hasSentenceSeparator(paragraphChar) {
 function removeAfterSeparators(paragraph) {
 	let movieTitle = '';
 	for(let i = 0; i < paragraph.length; i++) {
+		if(i == 0 && hasSeparator(paragraph[i]))
+			continue;
 		if(hasSeparator(paragraph[i]))
 			break;
 		movieTitle += paragraph[i];
