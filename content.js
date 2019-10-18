@@ -116,9 +116,17 @@ function isQuotationMark(titleChar) {
 	return quotation.includes(titleChar);
 }
 
-function isTitleStopWord(mvTitle) {
-	let stopWords = ["This", "this", "yes", "Yes", "Yes!"];
+function isTitleStopWord(movieTitle) {
+	let stopWords = ["This", "this", "yes", "yes!", "Yes", 
+	"Yes!", "YES", "YES!", "maybe", "Maybe", "u", "Hi", "hi",
+	"no", "No", "no!", "No!", "NO", "NO!", "but", "BUT", "But",
+	"com", "agreat", "Agreat", "thx", "Thx", "THX", "canyou", 
+	"Canyou", "What", "what", "WHAT", "Thankyou!", "thankyou",
+	"Thankyou", "thankyou!", "Mr", "mr", "right", "Right",
+	"youknow", "Youknow", "e", "E", "sure", "Sure", "SURE",
+	"be", "Be", "BE"];
 	let result = false;
+	let mvTitle = movieTitle.replace(/\s/g, ""); // replaces white-space with ""
 	stopWords.forEach(function(item) {
 		if(mvTitle === item)
 			result = true;
@@ -133,7 +141,7 @@ async function fetchAsync (url, tagName, classIndex, tagIndex) {
 		status: response.status
 	}) ).then(res => {
 		if(res.data.Response == 'False') return;
-		if(res.data.imdbVotes < 200 || res.data.imdbVotes === "N/A") return;
+		if(res.data.imdbVotes < 250 || res.data.imdbVotes === "N/A") return;
 		let imdbLink = res.data.imdbID;
 		createLink(imdbLink, tagName, classIndex, tagIndex);
 	}); 
