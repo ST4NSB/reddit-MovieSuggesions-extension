@@ -38,21 +38,21 @@ function checkTitleParagraphTag(postComment, postCommentIndex) {
 
 
 
-
-
 function clearParagraph(paragraph, tagName, classIndex, tagIndex) {
 	const apiKey = 'beefda61'; 
 	
 	let wordsArray = createWordsArrayFromSeparators(paragraph);
 	wordsArray.forEach(function(sentence) {
-		console.log(sentence);
+		//console.log(sentence);
 		let searchString = 'https://www.omdbapi.com/?apikey=';
 		searchString += apiKey;
 		searchString += '&t='; // title of the movie
 		
 		let movieTitle = removeAfterSeparators(sentence);
 		movieTitle = checkQuotationMarks(movieTitle);
+		if(isTitleStopWord(movieTitle)) return;
 		
+		console.log(movieTitle);
 		searchString += movieTitle;
 		fetchAsync(searchString, tagName, classIndex, tagIndex);
 	});
@@ -80,7 +80,6 @@ function hasSentenceSeparator(paragraphChar) {
 	const separators = '\n\t,.'; 
 	return separators.includes(paragraphChar);
 }
-
 
 function removeAfterSeparators(paragraph) {
 	let movieTitle = '';
@@ -117,6 +116,15 @@ function isQuotationMark(titleChar) {
 	return quotation.includes(titleChar);
 }
 
+function isTitleStopWord(mvTitle) {
+	let stopWords = ["This", "this", "yes", "Yes", "Yes!"];
+	let result = false;
+	stopWords.forEach(function(item) {
+		if(mvTitle === item)
+			result = true;
+	});
+	return result;
+}
 
 async function fetchAsync (url, tagName, classIndex, tagIndex) {
 	let response = await fetch(url);
@@ -128,7 +136,7 @@ async function fetchAsync (url, tagName, classIndex, tagIndex) {
 		if(res.data.imdbVotes < 200 || res.data.imdbVotes === "N/A") return;
 		let imdbLink = res.data.imdbID;
 		createLink(imdbLink, tagName, classIndex, tagIndex);
-	});
+	}); 
 }
 
 function createLink(link, tagName, classIndex, tagIndex) {
