@@ -124,7 +124,8 @@ function isTitleStopWord(movieTitle) {
 	"com", "agreat", "Agreat", "thx", "Thx", "THX", "canyou", 
 	"Canyou", "What", "what", "WHAT", "Thankyou!", "thankyou",
 	"Thankyou", "thankyou!", "Mr", "mr", "right", "Right",
-	"youknow", "Youknow", "sure", "Sure", "SURE", "be", "Be", "BE"];
+	"youknow", "Youknow", "sure", "Sure", "SURE", "be", "Be", 
+	"BE", "Also", "also"];
 	let result = false;
 	let mvTitle = movieTitle.replace(/\s/g, ""); // replaces white-space with ""
 	stopWords.forEach(function(item) {
