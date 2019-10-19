@@ -50,7 +50,7 @@ function clearParagraph(paragraph, tagName, classIndex, tagIndex) {
 		
 		let movieTitle = removeAfterSeparators(sentence);
 		movieTitle = checkQuotationMarks(movieTitle);
-    if(movieTitle.length <= 1) return;
+		if(movieTitle.length <= 1) return;
 		if(isTitleStopWord(movieTitle)) return;
 		
 		console.log(movieTitle);
