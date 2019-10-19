@@ -21,6 +21,7 @@ Uses **OMDb API** to link the iMDb movie titles
 + [x] doesn't create 2x links on list items with paragraph tag
 + [x] removes '-' from the front of the paragraph -> ex. -The Dark Knight
 + [x] added stop words list
++ [x] not searching for titles length <= 1
 
 # License
 This project is licensed unde **MIT** [https://opensource.org/licenses/MIT/]
