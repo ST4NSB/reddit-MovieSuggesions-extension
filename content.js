@@ -1,4 +1,4 @@
-/* SUPPORTS ONLY old.reddit.com */
+/* SUPPORTS ONLY https://old.reddit.com/r/MovieSuggestions/ */
 
 let posts = document.getElementsByClassName('sitetable nestedlisting')[0];
 createImdbLinks();
