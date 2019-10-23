@@ -126,7 +126,7 @@ function isTitleStopWord(movieTitle) {
 		"thankyou", "Thankyou", "thankyou!", "Mr", "mr", "right", 
 		"Right", "youknow", "Youknow", "sure", "Sure", "SURE", 
 		"be", "Be", "BE", "Also", "also", "that", "That", "Please", 
-		"please", "Seenit", "seenit", "God"];
+		"please", "Seenit", "seenit", "God", "Yeah", "yeah"];
 	let result = false;
 	let mvTitle = movieTitle.replace(/\s/g, ""); // replaces white-space with ""
 	stopWords.forEach(function(item) {
@@ -143,7 +143,7 @@ async function fetchAsync (url, tagName, classIndex, tagIndex) {
 		status: response.status
 	}) ).then(res => {
 		if(res.data.Response == 'False') return;
-		if(res.data.imdbVotes < 250 || res.data.imdbVotes === "N/A") return;
+		if(res.data.imdbVotes < 250 || res.data.imdbVotes === 'N/A') return;
 		let imdbLink = res.data.imdbID;
 		createLink(imdbLink, tagName, classIndex, tagIndex);
 	}); 
