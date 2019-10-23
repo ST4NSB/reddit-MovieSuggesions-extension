@@ -78,7 +78,7 @@ function createWordsArrayFromSeparators(paragraph) {
 }
 
 function hasSentenceSeparator(paragraphChar) {
-	const separators = '\n\t,.'; 
+	const separators = '\n\t,.&'; 
 	return separators.includes(paragraphChar);
 }
 
