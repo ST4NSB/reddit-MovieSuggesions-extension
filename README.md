@@ -3,7 +3,7 @@
 An extension for reddit to create an iMDb link to movies recommended in the MovieSuggestions sub-reddit  
 Uses **OMDb API** to link the iMDb movie titles  
 
-**!! ONLY works for the old reddit theme (old.reddit.com)**
+**!! ONLY works for the old reddit theme (old.reddit.com/r/MovieSuggestions)**
 
 # Example
 ### Without extension

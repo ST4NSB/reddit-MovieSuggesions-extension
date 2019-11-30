@@ -125,9 +125,9 @@ function isTitleStopWord(movieTitle) {
 		"mr", "right", "youknow", "sure", "be", "also",
 		"that", "please", "seenit", "god", "yeah", "oh",
 		"notamovie"];
-	let result = false;
 	let noSpace = movieTitle.replace(/\s/g, ""); // replaces white-space with ""
 	let mvTitle = noSpace.toLowerCase();
+	let result = false;
 	stopWords.forEach(function(item) {
 		if(mvTitle === item)
 			result = true;
