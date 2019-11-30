@@ -118,17 +118,16 @@ function isQuotationMark(titleChar) {
 }
 
 function isTitleStopWord(movieTitle) {
-	let stopWords = ["This", "this", "yes", "yes!", "Yes", 
-		"Yes!", "YES", "YES!", "maybe", "Maybe", "Hi", "hi",
-		"no", "No", "no!", "No!", "NO", "NO!", "but", "BUT", 
-		"But", "com", "agreat", "Agreat", "thx", "Thx", "THX",
-		"canyou", "Canyou", "What", "what", "WHAT", "Thankyou!",
-		"thankyou", "Thankyou", "thankyou!", "Mr", "mr", "right", 
-		"Right", "youknow", "Youknow", "sure", "Sure", "SURE", 
-		"be", "Be", "BE", "Also", "also", "that", "That", "Please", 
-		"please", "Seenit", "seenit", "God", "Yeah", "yeah", "Oh", "oh"];
+	let stopWords = [
+		"this", "this!", "yes", "yes!", "maybe", "hi", "hi!",
+		"no", "no!", "but", "com", "agreat", "thx",
+		"canyou", "what", "thankyou", "thankyou!", 
+		"mr", "right", "youknow", "sure", "be", "also",
+		"that", "please", "seenit", "god", "yeah", "oh",
+		"notamovie"];
 	let result = false;
-	let mvTitle = movieTitle.replace(/\s/g, ""); // replaces white-space with ""
+	let noSpace = movieTitle.replace(/\s/g, ""); // replaces white-space with ""
+	let mvTitle = noSpace.toLowerCase();
 	stopWords.forEach(function(item) {
 		if(mvTitle === item)
 			result = true;
