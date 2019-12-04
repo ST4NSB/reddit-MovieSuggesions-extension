@@ -1,15 +1,9 @@
 
 var timer;
-var timerSet = false;
 var txtArea = document.getElementsByTagName("TEXTAREA")[0];
 
 txtArea.oninput = function (e) {
-	if(!timerSet) {
-		timer = setTimeout(searchForMovieWithAPI, 1700);
-	}
-	else {
-		clearTimeout(timer);
-	}
+	timer = setTimeout(searchForMovieWithAPI, 1700);
 }
 
 function searchForMovieWithAPI() {
