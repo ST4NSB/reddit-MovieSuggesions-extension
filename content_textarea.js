@@ -51,7 +51,7 @@ let movieSearchedList = [];
 function createTextAreaLink(imdbTitle, imdbId) {
 	console.log(imdbTitle);
 	
-	if(movieSearchedList.indexOf(imdbId) == -1 ) {
+	if(movieSearchedList.indexOf(imdbId) == -1) {
 		movieSearchedList.push(imdbId);
 	}
 	else return;
@@ -66,11 +66,13 @@ function createTextAreaLink(imdbTitle, imdbId) {
 	let txtBoxValue = txtArea.value;
 	let index = -1;
 	let newContent = "";
-	for(let i = txtBoxValue.length - 1; i >= 1; i--)
+	for(let i = txtBoxValue.length - 1; i >= 1; i--) {
 		if(txtBoxValue[i] == '\n' && txtBoxValue[i - 1] == '\n') {
 			index = i;
 			break;
 		}
+	}
+	
 	for(let i = 0; i <= index; i++)
 		newContent += txtBoxValue[i];
 	
