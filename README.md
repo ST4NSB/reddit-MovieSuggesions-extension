@@ -5,7 +5,15 @@ Uses **OMDb API** to link the iMDb movie titles
 
 **!! ONLY works for the old reddit theme (old.reddit.com/r/MovieSuggestions)**
 
-# Example
+# 1. Movie Embedding from my reply
+## Example
+![Gif example with my reply](images/textarea_example.gif)
+
+**!!! Currently works on *old.reddit.com/r/MovieSuggestions* sub-reddit ONLY!**
+
+# 2. Movie Embeddeding from other's reply
+
+## Example
 ### Without extension
 ![image example without extension](images/no_extension.png)
 ### With extension
