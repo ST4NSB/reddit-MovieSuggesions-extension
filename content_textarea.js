@@ -1,6 +1,18 @@
 
+var timer;
+var timerSet = false;
 var txtArea = document.getElementsByTagName("TEXTAREA")[0];
+
 txtArea.oninput = function (e) {
+	if(!timerSet) {
+		timer = setTimeout(searchForMovieWithAPI, 1700);
+	}
+	else {
+		clearTimeout(timer);
+	}
+}
+
+function searchForMovieWithAPI() {
 	const apiKey = 'beefda61'; 
 	let searchString = 'https://www.omdbapi.com/?apikey=';
 	searchString += apiKey;
@@ -36,7 +48,6 @@ async function fetchAsyncTextArea (url) {
 }
 
 let movieSearchedList = [];
-
 function createTextAreaLink(imdbTitle, imdbId) {
 	console.log(imdbTitle);
 	
