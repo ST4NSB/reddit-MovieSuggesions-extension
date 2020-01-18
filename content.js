@@ -95,7 +95,7 @@ function removeAfterSeparators(paragraph) {
 }
 
 function hasSeparator(paragraphChar) {
-	const separators = '([-/?—;~<>.'; 
+	const separators = '([-/?—;~<>.”'; 
 	return separators.includes(paragraphChar);
 }
 
@@ -121,10 +121,11 @@ function isTitleStopWord(movieTitle) {
 	let stopWords = [
 		"this", "this!", "yes", "yes!", "maybe", "hi", "hi!",
 		"no", "no!", "but", "com", "agreat", "thx",
-		"canyou", "what", "thankyou", "thankyou!", 
+		"canyou", "what", "thankyou", "thankyou!", "lol", 
 		"mr", "right", "youknow", "sure", "be", "also",
 		"that", "please", "seenit", "god", "yeah", "oh",
-		"notamovie", "thanks", "thank"];
+		"notamovie", "thanks", "thank", "thankyou!", "thankyou!!",
+		"thankyou!!!", "so", "sad", "thecharacters", "perfect"];
 	let noSpace = movieTitle.replace(/\s/g, ""); // replaces white-space with ""
 	let mvTitle = noSpace.toLowerCase();
 	let result = false;
