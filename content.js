@@ -78,7 +78,7 @@ function createWordsArrayFromSeparators(paragraph) {
 }
 
 function hasSentenceSeparator(paragraphChar) {
-	const separators = '\n\t,.&'; 
+	const separators = '\n\t,.&*'; 
 	return separators.includes(paragraphChar);
 }
 
@@ -120,12 +120,13 @@ function isQuotationMark(titleChar) {
 function isTitleStopWord(movieTitle) {
 	let stopWords = [
 		"this", "this!", "yes", "yes!", "maybe", "hi", "hi!",
-		"no", "no!", "but", "com", "agreat", "thx",
+		"no", "no!", "but", "com", "agreat", "thx", "i",
 		"canyou", "what", "thankyou", "thankyou!", "lol", 
-		"mr", "right", "youknow", "sure", "be", "also",
-		"that", "please", "seenit", "god", "yeah", "oh",
+		"mr", "right", "youknow", "sure", "be", "also", "to",
+		"that", "please", "seenit", "god", "yeah", "oh", "want",
 		"notamovie", "thanks", "thank", "thankyou!", "thankyou!!",
-		"thankyou!!!", "so", "sad", "thecharacters", "perfect"];
+		"thankyou!!!", "so", "sad", "thecharacters", "perfect",
+		"can'tdoit"];
 	let noSpace = movieTitle.replace(/\s/g, ""); // replaces white-space with ""
 	let mvTitle = noSpace.toLowerCase();
 	let result = false;
