@@ -53,9 +53,9 @@ function clearParagraph(paragraph, tagName, classIndex, tagIndex) {
 		if(movieTitle.length <= 1) return;
 		if(isTitleStopWord(movieTitle)) return;
 		
-		console.log(movieTitle);
+		//console.log(movieTitle);
 		searchString += movieTitle;
-		fetchAsync(searchString, tagName, classIndex, tagIndex);
+		fetchAsync(searchString, movieTitle, tagName, classIndex, tagIndex);
 	});
 }
 
@@ -126,7 +126,7 @@ function isTitleStopWord(movieTitle) {
 		"that", "please", "seenit", "god", "yeah", "oh", "want",
 		"notamovie", "thanks", "thank", "thankyou!", "thankyou!!",
 		"thankyou!!!", "so", "sad", "thecharacters", "perfect",
-		"can'tdoit"];
+		"can'tdoit", "ah", "too", "http", "www"];
 	let noSpace = movieTitle.replace(/\s/g, ""); // replaces white-space with ""
 	let mvTitle = noSpace.toLowerCase();
 	let result = false;
@@ -137,7 +137,7 @@ function isTitleStopWord(movieTitle) {
 	return result;
 }
 
-async function fetchAsync (url, tagName, classIndex, tagIndex) {
+async function fetchAsync (url, movieTitle, tagName, classIndex, tagIndex) {
 	let response = await fetch(url);
 	let data = await response.json().then(data => ({
 		data: data,
@@ -146,18 +146,21 @@ async function fetchAsync (url, tagName, classIndex, tagIndex) {
 		if(res.data.Response == 'False') return;
 		if(res.data.imdbVotes < 250 || res.data.imdbVotes === 'N/A') return;
 		let imdbLink = res.data.imdbID;
-		createLink(imdbLink, tagName, classIndex, tagIndex);
+		createLink(imdbLink, movieTitle, tagName, classIndex, tagIndex);
 	}); 
 }
 
-function createLink(link, tagName, classIndex, tagIndex) {
-	let a = document.createElement('a');
-	let linkText = document.createTextNode('IMDb');
-	a.appendChild(linkText);
+function cleanTitleWhitespaces(str) {
+	return str.replace(/\s*$/,""); 
+}
+
+function createLink(link, movieTitle, tagName, classIndex, tagIndex) {	
 	let imdblink = 'https://www.imdb.com/title/';
 	imdblink += link;
-	a.href = imdblink;
-	a.className  = 'imdb_link';
-	a.target = '_blank';
-	posts.getElementsByClassName('md')[classIndex].getElementsByTagName(tagName)[tagIndex].appendChild(a);
+	actualPost = posts.getElementsByClassName('md')[classIndex].getElementsByTagName(tagName)[tagIndex]; 
+	//console.log(actualPost.innerHTML);
+	
+	mvt = cleanTitleWhitespaces(movieTitle);
+	let movieWithLink = mvt + '<a target="_blank" class="imdb_link" href ="' + imdblink + '">IMDb</a>';
+	actualPost.innerHTML = actualPost.innerHTML.replace(mvt, movieWithLink);
 }
