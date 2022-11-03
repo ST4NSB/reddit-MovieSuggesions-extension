@@ -95,7 +95,7 @@ function removeAfterSeparators(paragraph) {
 }
 
 function hasSeparator(paragraphChar) {
-	const separators = '([-/?—;~<>.”'; 
+	const separators = '([=-/?—;~<>.”'; 
 	return separators.includes(paragraphChar);
 }
 
@@ -120,13 +120,13 @@ function isQuotationMark(titleChar) {
 function isTitleStopWord(movieTitle) {
 	let stopWords = [
 		"this", "this!", "yes", "yes!", "maybe", "hi", "hi!",
-		"no", "no!", "but", "com", "agreat", "thx", "i",
+		"no", "no!", "but", "com", "agreat", "thx", "i", "rel",
 		"canyou", "what", "thankyou", "thankyou!", "lol", 
 		"mr", "right", "youknow", "sure", "be", "also", "to",
 		"that", "please", "seenit", "god", "yeah", "oh", "want",
-		"notamovie", "thanks", "thank", "thankyou!", "thankyou!!",
+		"notamovie", "thanks", "thank", "thankyou!!", "href", "a",
 		"thankyou!!!", "so", "sad", "thecharacters", "perfect",
-		"can'tdoit", "ah", "too", "http", "www"];
+		"can'tdoit", "ah", "too", "http", "www", "really", "https"];
 	let noSpace = movieTitle.replace(/\s/g, ""); // replaces white-space with ""
 	let mvTitle = noSpace.toLowerCase();
 	let result = false;
@@ -137,8 +137,8 @@ function isTitleStopWord(movieTitle) {
 	return result;
 }
 
-async function fetchAsync (url, movieTitle, tagName, classIndex, tagIndex) {
-	let response = await fetch(url);
+async function fetchAsync (url, movieTitle, tagName, classIndex, tagIndex) {  
+    let response = await fetch(url);
 	let data = await response.json().then(data => ({
 		data: data,
 		status: response.status
@@ -158,7 +158,9 @@ function createLink(link, movieTitle, tagName, classIndex, tagIndex) {
 	let imdblink = 'https://www.imdb.com/title/';
 	imdblink += link;
 	actualPost = posts.getElementsByClassName('md')[classIndex].getElementsByTagName(tagName)[tagIndex]; 
-	//console.log(actualPost.innerHTML);
+	
+	console.log(movieTitle);
+	console.log(actualPost.innerHTML);
 	
 	mvt = cleanTitleWhitespaces(movieTitle);
 	let movieWithLink = mvt + '<a target="_blank" class="imdb_link" href ="' + imdblink + '">IMDb</a>';

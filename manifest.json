@@ -4,7 +4,8 @@
 	"author": "ST4NSB",
 	"permissions": [
 		"tabs",
-		"*://*.reddit.com/r/MovieSuggestions/comments/**"
+		"*://*.reddit.com/r/MovieSuggestions/comments/**",
+        "https://www.omdbapi.com/?apikey=/**"
 	],
 	"description": "Useful to recognize links in the MovieSuggestions sub-reddit and create a hyperlink to their IMDb page",
 	"version": "3.0",
