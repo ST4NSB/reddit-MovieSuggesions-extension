@@ -77,7 +77,7 @@ function getAndCreateMovieLink(paragraph, tagName, classIndex, tagIndex) {
               data.imdbId,
               data.rating,
               year ? null : data.year,
-              data.title,
+              movieTitle,
               tagName,
               classIndex,
               tagIndex

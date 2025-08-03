@@ -15,7 +15,7 @@ async function fetchMovieImdbId(s, year = null) {
   const env = await getEnvironmentVariables();
   const apiKeys = env.OMDB_API_KEYS.split(",");
 
-  for (const key of apiKeys) {
+  for (const [i, key] of apiKeys.entries()) {
     try {
       const query = buildQueryString(key, s, year);
       const url = `${baseUrl}?${query}`;
@@ -24,11 +24,16 @@ async function fetchMovieImdbId(s, year = null) {
       const data = await res.json();
 
       if (data.Response === "False") {
-        console.error(`[OMDB API] Error: ${data.Error} (requested: ${url})`);
-
         if (data.Error === "Request limit reached!") {
+          // Only log if this is the last API key
+          if (i === apiKeys.length - 1) {
+            console.error(
+              `[OMDB API] Error: ${data.Error} (requested: ${url})`
+            );
+          }
           continue;
         } else {
+          console.error(`[OMDB API] Error: ${data.Error} (requested: ${url})`);
           break;
         }
       }
@@ -62,7 +67,6 @@ async function fetchMovieImdbId(s, year = null) {
     }
   }
 
-  console.error(`[OMDB API] All API keys exhausted or request failed.`);
   return null;
 }
 
