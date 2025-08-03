@@ -1,4 +1,6 @@
 const baseUrl = "https://www.omdbapi.com/";
+const filterOnlyMovies = false;
+const enableScraping = false;
 
 async function getEnvironmentVariables() {
   const response = await fetch(chrome.runtime.getURL(".env"));
@@ -11,13 +13,35 @@ async function getEnvironmentVariables() {
   };
 }
 
+function buildQueryString(key, s = null, i = null, year = null) {
+  const params = new URLSearchParams();
+
+  if (filterOnlyMovies) {
+    params.append("type", "movie");
+  }
+  if (i) {
+    params.append("i", i);
+  }
+  if (s) {
+    params.append("s", s);
+  }
+  if (year) {
+    params.append("y", year);
+  }
+  if (key) {
+    params.append("apikey", key);
+  }
+
+  return params.toString();
+}
+
 async function fetchMovieImdbId(s, year = null) {
   const env = await getEnvironmentVariables();
   const apiKeys = env.OMDB_API_KEYS.split(",");
 
-  for (const [i, key] of apiKeys.entries()) {
+  for (let [i, key] of apiKeys.entries()) {
     try {
-      const query = buildQueryString(key, s, year);
+      const query = buildQueryString(key, s, null, year);
       const url = `${baseUrl}?${query}`;
 
       const res = await fetch(url);
@@ -49,7 +73,10 @@ async function fetchMovieImdbId(s, year = null) {
       let imdbPageRating = null;
       let imdbPageYear = null;
       try {
-        const result = await getImdbRatingAndYear(movieId);
+        let result = await getImdbRatingAndYearByApi(movieId);
+        if (!result && enableScraping) {
+          result = await getImdbRatingAndYearByScraping(movieId);
+        }
         imdbPageRating = result.rating;
         imdbPageYear = result.year;
       } catch (err) {
@@ -70,29 +97,7 @@ async function fetchMovieImdbId(s, year = null) {
   return null;
 }
 
-function buildQueryString(key, s, year) {
-  const params = new URLSearchParams();
-
-  params.append("type", "movie");
-  if (s) {
-    params.append("s", s);
-  }
-  if (year) {
-    params.append("y", year);
-  }
-  if (key) {
-    params.append("apikey", key);
-  }
-
-  return params.toString();
-}
-
-/**
- * Fetch IMDb rating and year by IMDb ID by scraping the IMDb page HTML
- * @param {string} imdbId e.g. "tt0111161"
- * @returns {Promise<{rating: string, year: string}>}
- */
-async function getImdbRatingAndYear(imdbId) {
+async function getImdbRatingAndYearByScraping(imdbId) {
   if (!imdbId.startsWith("tt")) {
     throw new Error("Invalid IMDb ID format");
   }
@@ -140,4 +145,47 @@ async function getImdbRatingAndYear(imdbId) {
   }
 
   return { rating: rating, year: year };
+}
+
+async function getImdbRatingAndYearByApi(imdbId) {
+  if (!imdbId.startsWith("tt")) {
+    throw new Error("Invalid IMDb ID format");
+  }
+
+  const env = await getEnvironmentVariables();
+  const apiKeys = env.OMDB_API_KEYS.split(",");
+
+  for (let [i, key] of apiKeys.entries()) {
+    try {
+      const query = buildQueryString(key, null, imdbId, null);
+      const url = `${baseUrl}?${query}`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.Response === "False") {
+        if (data.Error === "Request limit reached!") {
+          // Only log if this is the last API key
+          if (i === apiKeys.length - 1) {
+            console.error(
+              `[OMDB API] Error: ${data.Error} (requested: ${url})`
+            );
+          }
+          continue;
+        } else {
+          console.error(`[OMDB API] Error: ${data.Error} (requested: ${url})`);
+          break;
+        }
+      }
+
+      return {
+        rating: data.imdbRating,
+        year: data.Year,
+      };
+    } catch (err) {
+      console.error(`[OMDB API] Request failed with API key ${key}:`, err);
+    }
+  }
+
+  return null;
 }
