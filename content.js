@@ -61,31 +61,33 @@ function getAndCreateMovieLink(paragraph, tagName, classIndex, tagIndex) {
     }
 
     console.log(
-      `[movie-suggestion-extension content.js] Processing movie title: "${movieTitle}" (year: ${year})`
+      `[movie-suggestion-extension - content.js] Processing movie title: "${movieTitle}" (year: ${year})`
     );
 
     fetchMovieImdbId(movieTitle, year)
       .then((data) => {
-        console.log(
-          `[movie-suggestion-extension content.js] Fetched IMDb data for movie "${movieTitle}"`,
-          data
-        );
-
-        if (data.imdbId) {
-          AddLinkToMovieInUserComment(
-            data.imdbId,
-            data.rating,
-            data.year,
-            movieTitle,
-            tagName,
-            classIndex,
-            tagIndex
+        if (data) {
+          console.log(
+            `[movie-suggestion-extension - content.js] Fetched IMDb data for movie "${movieTitle}"`,
+            data
           );
+
+          if (data.imdbId) {
+            AddLinkToMovieInUserComment(
+              data.imdbId,
+              data.rating,
+              year ? null : data.year,
+              data.title,
+              tagName,
+              classIndex,
+              tagIndex
+            );
+          }
         }
       })
       .catch((err) => {
         console.error(
-          "[movie-suggestion-extension content.js] Unexpected error when calling fetchMovieImdbId:",
+          "[movie-suggestion-extension - content.js] Unexpected error when calling fetchMovieImdbId:",
           err
         );
       });
@@ -93,7 +95,7 @@ function getAndCreateMovieLink(paragraph, tagName, classIndex, tagIndex) {
 }
 
 function AddLinkToMovieInUserComment(
-  link,
+  id,
   rating,
   year,
   movieTitle,
@@ -102,7 +104,7 @@ function AddLinkToMovieInUserComment(
   tagIndex
 ) {
   let imdblink = "https://www.imdb.com/title/";
-  imdblink += link;
+  imdblink += id;
 
   actualPost = posts
     .getElementsByClassName("md")
@@ -110,15 +112,20 @@ function AddLinkToMovieInUserComment(
 
   let imdbText = "IMDb";
   if (rating) {
-    imdbText += ` (${rating})`;
+    imdbText += ` - ${rating}`;
   }
   if (year) {
-    imdbText += ` [${year}]`;
+    imdbText += ` (${year})`;
   }
+
+  const ratingCssStyle = getRatingStyle(rating);
+  const styleAttr = ratingCssStyle
+    ? `style="background-color: ${ratingCssStyle.backgroundColor}; color: ${ratingCssStyle.color} !important;"`
+    : "";
 
   let movieWithLink =
     movieTitle +
-    `<a target="_blank" class="imdb_link" href="${imdblink}">${imdbText}</a>`;
+    `<a target="_blank" class="imdb_link" ${styleAttr} href="${imdblink}">${imdbText}</a>`;
 
   actualPost.innerHTML = actualPost.innerHTML.replace(
     movieTitle,

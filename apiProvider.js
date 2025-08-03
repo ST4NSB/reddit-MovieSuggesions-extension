@@ -1,7 +1,5 @@
 const baseUrl = "https://www.omdbapi.com/";
 
-const getRatingAndYearFeatureEnabled = false;
-
 async function getEnvironmentVariables() {
   const response = await fetch(chrome.runtime.getURL(".env"));
   const text = await response.text();
@@ -42,20 +40,15 @@ async function fetchMovieImdbId(s, year = null) {
 
       const movieId = data.Search[0].imdbID; // Get the first movie's IMDb ID
       const title = data.Search[0].Title;
+
       let imdbPageRating = null;
       let imdbPageYear = null;
-
-      if (getRatingAndYearFeatureEnabled) {
-        getImdbRatingAndYear(movieId)
-          .then(({ returnedRating, returnedYear }) => {
-            imdbPageRating = returnedRating;
-            imdbPageYear = returnedYear;
-          })
-          .catch((err) =>
-            console.error(
-              `[getImdbRatingAndYear] Error getting rating & year: ${err.message}`
-            )
-          );
+      try {
+        const result = await getImdbRatingAndYear(movieId);
+        imdbPageRating = result.rating;
+        imdbPageYear = result.year;
+      } catch (err) {
+        console.error(`[getImdbRatingAndYear] Failed for ID ${movieId}:`, err);
       }
 
       return {
@@ -100,7 +93,7 @@ async function getImdbRatingAndYear(imdbId) {
     throw new Error("Invalid IMDb ID format");
   }
 
-  const url = `https://www.imdb.com/title/${imdbId}/`;
+  const url = `https://www.imdb.com/title/${imdbId}`;
 
   const response = await fetch(url, {
     headers: {
@@ -126,7 +119,9 @@ async function getImdbRatingAndYear(imdbId) {
 
   // Try to find rating span by itemprop or by other class selectors
   let rating =
-    doc.querySelector('span[itemprop="ratingValue"]')?.textContent?.trim() ||
+    doc
+      .querySelector(".rating-star > span:nth-child(2)")
+      ?.textContent?.trim() ||
     doc
       .querySelector(
         'div[data-testid="hero-rating-bar__aggregate-rating__score"] > span'
@@ -134,28 +129,11 @@ async function getImdbRatingAndYear(imdbId) {
       ?.textContent?.trim() ||
     null;
 
-  // Extract year: usually inside a <a> inside #titleYear or data-testid attribute
-  // New IMDb uses data-testid="title-details-releasedate"
-  let year =
-    doc.querySelector("#titleYear a")?.textContent?.trim() ||
-    doc
-      .querySelector(
-        'ul[data-testid="hero-title-block__metadata"] > li:nth-child(1)'
-      )
-      ?.textContent?.trim() ||
-    doc
-      .querySelector(
-        'ul.ipc-inline-list--show-dividers:nth-child(2) > li:nth-child(1) > a:nth-child(1)"]'
-      )
-      ?.textContent?.trim() ||
-    null;
+  let year = doc.querySelector("title")?.textContent?.trim() || null;
 
-  if (!rating || !year) {
-    throw new Error("Could not find rating or year on IMDb page");
+  if (year) {
+    year = extractYearFromText(year);
   }
 
-  // Year may include extra characters (like parentheses or text), clean it to digits only
-  year = year.match(/\d{4}/)?.[0] || year;
-
-  return { rating, year };
+  return { rating: rating, year: year };
 }
