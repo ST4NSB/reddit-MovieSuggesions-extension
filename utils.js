@@ -4,13 +4,11 @@ function getRatingStyle(rating) {
     return null;
   }
 
-  if (r >= 8.5) {
-    return { backgroundColor: "#2ecc71", color: "white" }; // Excellent - Green
-  } else if (r >= 8.0) {
+  if (r >= 8.3) {
     return { backgroundColor: "#58d68d", color: "black" }; // Very Good - Light Green
-  } else if (r >= 7.5) {
+  } else if (r >= 7.8) {
     return { backgroundColor: "#b5e61d", color: "black" }; // Good - Yellow-Green
-  } else if (r >= 6.8) {
+  } else if (r >= 6.9) {
     return { backgroundColor: "#f7dc6f", color: "black" }; // Average - Yellow
   } else if (r >= 6.0) {
     return { backgroundColor: "#f39c12", color: "white" }; // Low - Orange
