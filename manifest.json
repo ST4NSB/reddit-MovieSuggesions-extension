@@ -1,33 +1,25 @@
 {
-	"manifest_version": 2,
-	"name": "/r/MovieSuggestions - Movies Embedding (BETA)",
-	"author": "ST4NSB",
-	"permissions": [
-		"tabs",
-		"*://*.reddit.com/r/MovieSuggestions/comments/**",
-        "https://www.omdbapi.com/?apikey=/**"
-	],
-	"description": "Useful to recognize links in the MovieSuggestions sub-reddit and create a hyperlink to their IMDb page",
-	"version": "3.0",
-	"content_scripts": [
-		{
-			"matches": [
-				"*://*.reddit.com/r/MovieSuggestions/comments/*"
-			],
-			"css": [
-				"assets/content.css"
-			],
-			"js": [
-				"content.js"
-			]
-		},
-		{
-			"matches": [
-				"*://*.reddit.com/r/MovieSuggestions/comments/*"
-			],
-			"js": [
-				"content_textarea.js"
-			]
-		}
-	]
+  "manifest_version": 2,
+  "name": "/r/MovieSuggestions - Creating IMDb Links from users comments",
+  "author": "ST4NSB",
+  "permissions": [
+    "tabs",
+    "*://*.reddit.com/r/MovieSuggestions/comments/**",
+    "https://www.omdbapi.com/?apikey=/**"
+  ],
+  "description": "Useful to recognize links in the MovieSuggestions sub-reddit and create a hyperlink to their IMDb page",
+  "version": "4.0",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "c3e5d1e1fabd9f8c16423afc1963cfb7a2eb6d36@temporary-addon"
+    }
+  },
+  "web_accessible_resources": ["assets/*.css", ".env"],
+  "content_scripts": [
+    {
+      "matches": ["*://*.reddit.com/r/MovieSuggestions/comments/*"],
+      "css": ["assets/content.css"],
+      "js": ["apiProvider.js", "utils.js", "content.js"]
+    }
+  ]
 }

@@ -1,168 +1,127 @@
 /* SUPPORTS ONLY https://old.reddit.com/r/MovieSuggestions/ */
 
-let posts = document.getElementsByClassName('sitetable nestedlisting')[0];
+let posts = document.getElementsByClassName("sitetable nestedlisting")[0];
 createImdbLinks();
 
 function createImdbLinks() {
-	let postsLength = posts.getElementsByClassName('md').length;
-	for(let i = 0; i < postsLength; i++) {
-		let comment = posts.getElementsByClassName('md')[i]; // reply post div class
-		checkTitleListTag(comment, i); // check in <li>..</li>
-		checkTitleParagraphTag(comment, i); // check in <p>..</p>
-	}
+  const commentElements = posts.getElementsByClassName("md");
+  const numberOfComments = commentElements.length;
+
+  for (let commentIndex = 0; commentIndex < numberOfComments; commentIndex++) {
+    const commentElement = commentElements[commentIndex];
+
+    handleListItems(commentElement, commentIndex);
+    handleParagraphs(commentElement, commentIndex);
+  }
 }
 
-function checkTitleListTag(postComment, postCommentIndex) {
-	let postCommentLength = postComment.getElementsByTagName('li').length;
-	for(let i = 0; i < postCommentLength; i++) {
-		let liChild = postComment.getElementsByTagName('li')[i];
-	
-		if(liChild.firstChild.nodeType == Node.TEXT_NODE) {
-			let listItem = postComment.getElementsByTagName('li')[i].textContent;
-			//console.log(listItem);
-			clearParagraph(listItem, 'li', postCommentIndex, i);	
-		}
-		
-	}
+function handleListItems(commentElement, commentIndex) {
+  const listItems = commentElement.getElementsByTagName("li");
+  const numberOfListItems = listItems.length;
+
+  for (let itemIndex = 0; itemIndex < numberOfListItems; itemIndex++) {
+    const listItem = listItems[itemIndex];
+
+    if (listItem.firstChild.nodeType === Node.TEXT_NODE) {
+      const listItemText = listItem.textContent;
+      getAndCreateMovieLink(listItemText, "li", commentIndex, itemIndex);
+    }
+  }
 }
 
-function checkTitleParagraphTag(postComment, postCommentIndex) {
-	let postCommentLength = postComment.getElementsByTagName('p').length;
-	for(let i = 0; i < postCommentLength; i++) {
-		let paragraph = postComment.getElementsByTagName('p')[i].textContent;
-		//console.log(paragraph);
-		clearParagraph(paragraph, 'p', postCommentIndex, i);	
-	}
+function handleParagraphs(commentElement, commentIndex) {
+  const paragraphs = commentElement.getElementsByTagName("p");
+  const numberOfParagraphs = paragraphs.length;
+
+  for (
+    let paragraphIndex = 0;
+    paragraphIndex < numberOfParagraphs;
+    paragraphIndex++
+  ) {
+    const paragraphText = paragraphs[paragraphIndex].textContent;
+    getAndCreateMovieLink(paragraphText, "p", commentIndex, paragraphIndex);
+  }
 }
 
+function getAndCreateMovieLink(paragraph, tagName, classIndex, tagIndex) {
+  let sentences = createSentencesFromSeparators(paragraph);
 
+  for (let sentence of sentences) {
+    let movieTitle = removeAfterSeparators(sentence);
+    movieTitle = checkQuotationMarks(movieTitle);
+    movieTitle = movieTitle.trim();
+    const year = extractYearFromText(sentence);
 
+    if (movieTitle.length <= 1) {
+      continue;
+    }
 
-function clearParagraph(paragraph, tagName, classIndex, tagIndex) {
-	const apiKey = 'beefda61'; 
-	
-	let wordsArray = createWordsArrayFromSeparators(paragraph);
-	wordsArray.forEach(function(sentence) {
-		//console.log(sentence);
-		let searchString = 'https://www.omdbapi.com/?apikey=';
-		searchString += apiKey;
-		searchString += '&t='; // title of the movie
-		
-		let movieTitle = removeAfterSeparators(sentence);
-		movieTitle = checkQuotationMarks(movieTitle);
-		if(movieTitle.length <= 1) return;
-		if(isTitleStopWord(movieTitle)) return;
-		
-		//console.log(movieTitle);
-		searchString += movieTitle;
-		fetchAsync(searchString, movieTitle, tagName, classIndex, tagIndex);
-	});
+    if (isTitleStopWord(movieTitle)) {
+      continue;
+    }
+
+    console.log(
+      `[movie-suggestion-extension content.js] Processing movie title: "${movieTitle}" (year: ${year})`
+    );
+
+    fetchMovieImdbId(movieTitle, year)
+      .then((data) => {
+        console.log(
+          `[movie-suggestion-extension content.js] Fetched IMDb data for movie "${movieTitle}"`,
+          data
+        );
+
+        if (data.imdbId) {
+          AddLinkToMovieInUserComment(
+            data.imdbId,
+            data.rating,
+            data.year,
+            movieTitle,
+            tagName,
+            classIndex,
+            tagIndex
+          );
+        }
+      })
+      .catch((err) => {
+        console.error(
+          "[movie-suggestion-extension content.js] Unexpected error when calling fetchMovieImdbId:",
+          err
+        );
+      });
+  }
 }
 
-function createWordsArrayFromSeparators(paragraph) {
-	let words = [];
-	let word = '';
-	for(let i = 0; i < paragraph.length; i++) {
-		if(hasSentenceSeparator(paragraph[i])) {
-			words.push(word);
-			word = '';
-			if(paragraph[i + 1] === ' ')
-				i++;
-		}
-		else 
-			word += paragraph[i];
-	}
-	if(word != '')
-		words.push(word);
-	return words;
-}
+function AddLinkToMovieInUserComment(
+  link,
+  rating,
+  year,
+  movieTitle,
+  tagName,
+  classIndex,
+  tagIndex
+) {
+  let imdblink = "https://www.imdb.com/title/";
+  imdblink += link;
 
-function hasSentenceSeparator(paragraphChar) {
-	const separators = '\n\t,.&*'; 
-	return separators.includes(paragraphChar);
-}
+  actualPost = posts
+    .getElementsByClassName("md")
+    [classIndex].getElementsByTagName(tagName)[tagIndex];
 
-function removeAfterSeparators(paragraph) {
-	let movieTitle = '';
-	for(let i = 0; i < paragraph.length; i++) {
-		if(i == 0 && hasSeparator(paragraph[i]))
-			continue;
-		if(hasSeparator(paragraph[i]))
-			break;
-		movieTitle += paragraph[i];
-	}
-	return movieTitle;
-}
+  let imdbText = "IMDb";
+  if (rating) {
+    imdbText += ` (${rating})`;
+  }
+  if (year) {
+    imdbText += ` [${year}]`;
+  }
 
-function hasSeparator(paragraphChar) {
-	const separators = '([=-/?—;~<>.”'; 
-	return separators.includes(paragraphChar);
-}
+  let movieWithLink =
+    movieTitle +
+    `<a target="_blank" class="imdb_link" href="${imdblink}">${imdbText}</a>`;
 
-function checkQuotationMarks(title) {
-	let movieTitle = '', quotationSignFound = false;
-	for(let i = 0; i < title.length; i++) {
-		if(quotationSignFound)
-			movieTitle += title[i];
-		if(isQuotationMark(title[i]) && quotationSignFound) 
-			return movieTitle;
-		if(isQuotationMark(title[i]) && !quotationSignFound) 
-			quotationSignFound = true;
-	}
-	return title;
-}
-
-function isQuotationMark(titleChar) {
-	const quotation = '\`\"\“\”';
-	return quotation.includes(titleChar);
-}
-
-function isTitleStopWord(movieTitle) {
-	let stopWords = [
-		"this", "this!", "yes", "yes!", "maybe", "hi", "hi!",
-		"no", "no!", "but", "com", "agreat", "thx", "i", "rel",
-		"canyou", "what", "thankyou", "thankyou!", "lol", 
-		"mr", "right", "youknow", "sure", "be", "also", "to",
-		"that", "please", "seenit", "god", "yeah", "oh", "want",
-		"notamovie", "thanks", "thank", "thankyou!!", "href", "a",
-		"thankyou!!!", "so", "sad", "thecharacters", "perfect",
-		"can'tdoit", "ah", "too", "http", "www", "really", "https"];
-	let noSpace = movieTitle.replace(/\s/g, ""); // replaces white-space with ""
-	let mvTitle = noSpace.toLowerCase();
-	let result = false;
-	stopWords.forEach(function(item) {
-		if(mvTitle === item)
-			result = true;
-	});
-	return result;
-}
-
-async function fetchAsync (url, movieTitle, tagName, classIndex, tagIndex) {  
-    let response = await fetch(url);
-	let data = await response.json().then(data => ({
-		data: data,
-		status: response.status
-	}) ).then(res => {
-		if(res.data.Response == 'False') return;
-		if(res.data.imdbVotes < 250 || res.data.imdbVotes === 'N/A') return;
-		let imdbLink = res.data.imdbID;
-		createLink(imdbLink, movieTitle, tagName, classIndex, tagIndex);
-	}); 
-}
-
-function cleanTitleWhitespaces(str) {
-	return str.replace(/\s*$/,""); 
-}
-
-function createLink(link, movieTitle, tagName, classIndex, tagIndex) {	
-	let imdblink = 'https://www.imdb.com/title/';
-	imdblink += link;
-	actualPost = posts.getElementsByClassName('md')[classIndex].getElementsByTagName(tagName)[tagIndex]; 
-	
-	console.log(movieTitle);
-	console.log(actualPost.innerHTML);
-	
-	mvt = cleanTitleWhitespaces(movieTitle);
-	let movieWithLink = mvt + '<a target="_blank" class="imdb_link" href ="' + imdblink + '">IMDb</a>';
-	actualPost.innerHTML = actualPost.innerHTML.replace(mvt, movieWithLink);
+  actualPost.innerHTML = actualPost.innerHTML.replace(
+    movieTitle,
+    movieWithLink
+  );
 }
