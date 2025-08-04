@@ -17,11 +17,11 @@ Uses **OMDb API** to link the iMDb movie titles
 
 ### Without extension
 
-![image example without extension](images/no_extension.png)
+<img width="208" height="88" alt="image" src="https://github.com/user-attachments/assets/b18e841d-f835-42ba-aa79-49e6dd0b9e47" />
 
 ### With extension
 
-![image example with extension](images/with_extension.png)
+<img width="363" height="102" alt="image" src="https://github.com/user-attachments/assets/ac4c4564-db78-439f-ba12-60cc7951d91f" />
 
 # Development progress
 
