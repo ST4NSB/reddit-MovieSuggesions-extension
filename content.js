@@ -127,6 +127,14 @@ function AddLinkToMovieInUserComment(
     movieTitle +
     `<a target="_blank" class="imdb_link" ${styleAttr} href="${imdblink}">${imdbText}</a>`;
 
+  const possibleTags = actualPost.querySelectorAll("strong, b, em, i, mark, u");
+  for (const tag of possibleTags) {
+    if (tag.textContent.trim() === movieTitle) {
+      tag.innerHTML = movieWithLink;
+      return;
+    }
+  }
+
   actualPost.innerHTML = actualPost.innerHTML.replace(
     movieTitle,
     movieWithLink
