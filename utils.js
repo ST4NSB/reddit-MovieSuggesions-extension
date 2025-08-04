@@ -283,6 +283,7 @@ const stopWords = [
   "though",
   "y'all",
   "removed]",
+  "story",
 ];
 
 function isTitleStopWord(movieTitle) {

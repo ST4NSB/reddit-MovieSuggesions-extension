@@ -2,6 +2,8 @@ const baseUrl = "https://www.omdbapi.com/";
 const filterOnlyMovies = true;
 const enableScraping = true;
 
+const inMemoryCache = new Map();
+
 async function getEnvironmentVariables() {
   const response = await fetch(chrome.runtime.getURL(".env"));
   const text = await response.text();
@@ -36,6 +38,21 @@ function buildQueryString(key, s = null, i = null, year = null) {
 }
 
 async function fetchMovieDetails(s, year = null) {
+  const cacheKey = buildCacheKey(s, year);
+
+  // 1. Check in-memory cache
+  if (inMemoryCache.has(cacheKey)) {
+    return inMemoryCache.get(cacheKey);
+  }
+
+  // 2. Check localStorage
+  const localData = getFromLocalStorage(cacheKey);
+  if (localData) {
+    // Store in memory for faster future access
+    inMemoryCache.set(cacheKey, localData);
+    return localData;
+  }
+
   const env = await getEnvironmentVariables();
   const apiKeys = env.OMDB_API_KEYS.split(",");
 
@@ -87,12 +104,25 @@ async function fetchMovieDetails(s, year = null) {
         console.error(`[getImdbRatingAndYear] Failed for ID ${movieId}:`, err);
       }
 
-      return {
+      const movieDetails = {
         title: title,
         imdbId: movieId,
         rating: imdbPageRating,
         year: imdbPageYear,
       };
+
+      // Store in both caches if all properties are not null
+      if (
+        movieDetails.imdbId &&
+        movieDetails.rating &&
+        movieDetails.year &&
+        movieDetails.title
+      ) {
+        inMemoryCache.set(cacheKey, movieDetails);
+        setToLocalStorage(cacheKey, movieDetails);
+      }
+
+      return movieDetails;
     } catch (err) {
       console.error(`[OMDB API] Request failed with API key ${key}:`, err);
     }
