@@ -64,7 +64,7 @@ function getAndCreateMovieLink(paragraph, tagName, classIndex, tagIndex) {
       `[movie-suggestion-extension - content.js] Processing movie title: "${movieTitle}" (year: ${year})`
     );
 
-    fetchMovieImdbId(movieTitle, year)
+    fetchMovieDetails(movieTitle, year)
       .then((data) => {
         if (data) {
           console.log(

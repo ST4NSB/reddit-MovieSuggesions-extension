@@ -35,7 +35,7 @@ function buildQueryString(key, s = null, i = null, year = null) {
   return params.toString();
 }
 
-async function fetchMovieImdbId(s, year = null) {
+async function fetchMovieDetails(s, year = null) {
   const env = await getEnvironmentVariables();
   const apiKeys = env.OMDB_API_KEYS.split(",");
 
