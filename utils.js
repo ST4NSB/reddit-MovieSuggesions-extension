@@ -5,15 +5,15 @@ function getRatingStyle(rating) {
   }
 
   if (r >= 8.3) {
-    return { backgroundColor: "#58d68d", color: "black" }; // Very Good - Light Green
+    return { backgroundColor: "#26a65b", color: "white" }; // Very Good - Emerald Green
   } else if (r >= 7.8) {
-    return { backgroundColor: "#b5e61d", color: "black" }; // Good - Yellow-Green
-  } else if (r >= 6.9) {
-    return { backgroundColor: "#f7dc6f", color: "black" }; // Average - Yellow
+    return { backgroundColor: "#6ede9c", color: "black" }; // Good - Light Green
+  } else if (r >= 7.0) {
+    return { backgroundColor: "#f1c40f", color: "black" }; // Average - Yellow
   } else if (r >= 6.0) {
-    return { backgroundColor: "#f39c12", color: "white" }; // Low - Orange
+    return { backgroundColor: "#e67e22", color: "white" }; // Low - Orange
   } else {
-    return { backgroundColor: "#e74c3c", color: "white" }; // Bad - Red
+    return { backgroundColor: "#c0392b", color: "white" }; // Bad - Red
   }
 }
 

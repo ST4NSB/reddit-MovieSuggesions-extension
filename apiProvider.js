@@ -1,6 +1,6 @@
 const baseUrl = "https://www.omdbapi.com/";
-const filterOnlyMovies = false;
-const enableScraping = false;
+const filterOnlyMovies = true;
+const enableScraping = true;
 
 async function getEnvironmentVariables() {
   const response = await fetch(chrome.runtime.getURL(".env"));
@@ -79,6 +79,10 @@ async function fetchMovieImdbId(s, year = null) {
         }
         imdbPageRating = result.rating;
         imdbPageYear = result.year;
+
+        if (imdbPageRating === "N/A") {
+          imdbPageRating = null;
+        }
       } catch (err) {
         console.error(`[getImdbRatingAndYear] Failed for ID ${movieId}:`, err);
       }

@@ -72,7 +72,7 @@ function getAndCreateMovieLink(paragraph, tagName, classIndex, tagIndex) {
             data
           );
 
-          if (data.imdbId) {
+          if (data.imdbId && data.rating) {
             AddLinkToMovieInUserComment(
               data.imdbId,
               data.rating,
@@ -87,7 +87,7 @@ function getAndCreateMovieLink(paragraph, tagName, classIndex, tagIndex) {
       })
       .catch((err) => {
         console.error(
-          "[movie-suggestion-extension - content.js] Unexpected error when calling fetchMovieImdbId:",
+          "[movie-suggestion-extension - content.js] Unexpected error when calling fetchMovieImdbId",
           err
         );
       });

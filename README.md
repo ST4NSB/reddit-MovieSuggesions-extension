@@ -5,6 +5,12 @@ Uses **OMDb API** to link the iMDb movie titles
 
 **!! ONLY works for the old reddit theme (old.reddit.com/r/MovieSuggestions)**
 
+# Installing
+
+- Download the latest release
+- Create an .env file containing OMDB_API_KEYS with your api key/s (separated with , for multiple keys) from OMDb like ex. OMDB_API_KEYS=hs4ddfd,rrisppsf
+- Load the extension on your browser
+
 # Movie Embeddeding from other's reply
 
 ## Example
