@@ -36,6 +36,8 @@ function getFromLocalStorage(key) {
 }
 
 function cleanExpiredImdbCache() {
+  let cleanedCount = 0;
+
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     const item = localStorage.getItem(key);
@@ -48,6 +50,7 @@ function cleanExpiredImdbCache() {
         Date.now() - parsed.timestamp > CACHE_EXPIRATION_MS
       ) {
         localStorage.removeItem(key);
+        cleanedCount++;
         // Adjust index since localStorage shrinks
         i--;
       }
@@ -58,5 +61,7 @@ function cleanExpiredImdbCache() {
     }
   }
 
-  console.info("[cleanExpiredImdbCache] Expired IMDb cache entries cleaned.");
+  console.info(
+    `[cleanExpiredImdbCache] Expired IMDb cache entries cleaned. Removed a total of ${cleanedCount} entries.`
+  );
 }
