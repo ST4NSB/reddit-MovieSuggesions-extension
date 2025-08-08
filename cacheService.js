@@ -1,6 +1,8 @@
 // Set cache expiration time in milliseconds (e.g., 4 days)
 const CACHE_EXPIRATION_MS = 4 * 24 * 60 * 60 * 1000;
 
+cleanExpiredImdbCache();
+
 function buildCacheKey(s, year) {
   return `${s || ""}_${year || ""}`;
 }
@@ -31,4 +33,30 @@ function getFromLocalStorage(key) {
     console.error(`Failed to parse item from localStorage for key: ${key}`);
     return null;
   }
+}
+
+function cleanExpiredImdbCache() {
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const item = localStorage.getItem(key);
+    if (!item) continue;
+    try {
+      const parsed = JSON.parse(item);
+      if (
+        parsed.value &&
+        parsed.value.imdbId &&
+        Date.now() - parsed.timestamp > CACHE_EXPIRATION_MS
+      ) {
+        localStorage.removeItem(key);
+        // Adjust index since localStorage shrinks
+        i--;
+      }
+    } catch {
+      console.error(
+        `[cleanExpiredImdbCache] Failed to parse item from localStorage for key: ${key}`
+      );
+    }
+  }
+
+  console.info("[cleanExpiredImdbCache] Expired IMDb cache entries cleaned.");
 }
