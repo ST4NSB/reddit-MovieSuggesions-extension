@@ -5,9 +5,9 @@ function getRatingStyle(rating) {
   }
 
   if (r >= 8.3) {
-    return { backgroundColor: "#26a65b", color: "white" }; // Very Good - Emerald Green
+    return { backgroundColor: "#119146", color: "white" }; // Very Good - Emerald Green
   } else if (r >= 7.8) {
-    return { backgroundColor: "#6ede9c", color: "black" }; // Good - Light Green
+    return { backgroundColor: "#83f0a4", color: "black" }; // Good - Light Green
   } else if (r >= 7.0) {
     return { backgroundColor: "#f1c40f", color: "black" }; // Average - Yellow
   } else if (r >= 6.0) {
@@ -43,6 +43,17 @@ function isQuotationMark(titleChar) {
 function hasSeparator(paragraphChar) {
   const separators = "([=-/?—;~<>.”!";
   return separators.includes(paragraphChar);
+}
+
+function stripPunctuationAndSeparators(word) {
+  const punctuation = '.,;:!?-[]{}()~=+*&^%$#@<>"';
+  let strippedWord = "";
+  for (let char of word) {
+    if (!punctuation.includes(char)) {
+      strippedWord += char;
+    }
+  }
+  return strippedWord;
 }
 
 function createSentencesFromSeparators(paragraph) {
@@ -87,14 +98,26 @@ function checkQuotationMarks(title) {
 
 const stopWords = [
   "this",
-  "this!",
+  "that",
+  "it",
+  "its",
+  "there",
+  "they",
+  "them",
+  "he",
+  "she",
+  "we",
+  "you",
+  "thisis",
+  "thatis",
+  "thisistheone",
+  "thatistheone",
+  "thisisnot",
   "yes",
-  "yes!",
+  "no",
   "maybe",
   "hi",
-  "hi!",
   "no",
-  "no!",
   "but",
   "com",
   "agreat",
@@ -104,7 +127,6 @@ const stopWords = [
   "canyou",
   "what",
   "thankyou",
-  "thankyou!",
   "lol",
   "mr",
   "right",
@@ -123,15 +145,16 @@ const stopWords = [
   "notamovie",
   "thanks",
   "thank",
-  "thankyou!!",
   "href",
   "a",
-  "thankyou!!!",
   "so",
   "sad",
   "thecharacters",
   "perfect",
   "can'tdoit",
+  "cantdoit",
+  "cant",
+  "dont",
   "ah",
   "too",
   "http",
@@ -140,7 +163,6 @@ const stopWords = [
   "https",
   "okay",
   "ok",
-  "ok!",
   "wow",
   "nice",
   "cool",
@@ -198,6 +220,12 @@ const stopWords = [
   "btw",
   "u",
   "ur",
+  "goodone",
+  "badone",
+  "goodjob",
+  "badjob",
+  "getsmeeverytime",
+  "get'smeeverytime",
   "r",
   "is",
   "was",
@@ -274,6 +302,17 @@ const stopWords = [
   "thing",
   "stuff",
   "anything",
+  "nothing",
+  "everything",
+  "something",
+  "noworries",
+  "noproblem",
+  "noidea",
+  "nothanks",
+  "noone",
+  "hopefully",
+  "maybe",
+  "probably",
   "kinda",
   "sorta",
   "just",
@@ -282,13 +321,71 @@ const stopWords = [
   "maybe",
   "though",
   "y'all",
-  "removed]",
+  "removed",
   "story",
+  "archive",
+  "red",
+  "blue",
+  "green",
+  "black",
+  "white",
+  "yellow",
+  "orange",
+  "purple",
+  "pink",
+  "brown",
+  "movie",
+  "etc",
+  "links",
+  "inspirational",
+  "inspiration",
+  "motivation",
+  "motivational",
+  "inspired",
+  "sogood",
+  "soogood",
+  "howoldareyou",
+  "itsallgood",
+  "itsallright",
+  "itsallok",
+  "itsallcool",
+  "itsallfine",
+  "itsallawesome",
+  "itsallgreat",
+  "itsallfantastic",
+  "itsall",
+  "itsallbad",
+  "crime",
+  "action",
+  "adventure",
+  "comedy",
+  "drama",
+  "fantasy",
+  "horror",
+  "mistery",
+  "mystery",
+  "romance",
+  "sci-fi",
+  "thriller",
+  "animation",
+  "documentary",
+  "family",
+  "familyfriendly",
+  "familysecrets",
+  "spring",
+  "summer",
+  "autumn",
+  "fall",
+  "winter",
+  "springtime",
+  "summertime",
+  "autumntime",
+  "wintertime",
 ];
 
 function isTitleStopWord(movieTitle) {
-  let noSpace = movieTitle.replace(/\s/g, ""); // replaces white-space with ""
-  let mvTitle = noSpace.toLowerCase();
+  let noSpaceTitle = movieTitle.replace(/\s/g, ""); // replaces white-space with ""
+  let mvTitle = stripPunctuationAndSeparators(noSpaceTitle).toLowerCase();
   let result = stopWords.some(function (item) {
     return mvTitle === item;
   });
