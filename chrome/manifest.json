@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "/r/MovieSuggestions - Creating IMDb Links from users comments",
+  "author": "ST4NSB",
+  "action": {
+    "default_title": "Reddit Movie Suggestions"
+  },
+  "description": "Useful to recognize links in the MovieSuggestions sub-reddit and create a hyperlink to their IMDb page",
+  "version": "4.2",
+  "content_scripts": [
+    {
+      "matches": ["*://*.reddit.com/r/MovieSuggestions/comments/*"],
+      "css": ["assets/content.css"],
+      "js": ["utils.js", "cacheService.js", "apiProvider.js", "content.js"]
+    }
+  ], "host_permissions": [
+    "*://*.reddit.com/r/MovieSuggestions/comments/*",
+    "*://*.omdbapi.com/*",
+    "*://*.imdb.com/*"
+  ], "web_accessible_resources": [
+    {
+      "resources": [".env"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

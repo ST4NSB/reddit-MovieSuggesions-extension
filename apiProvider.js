@@ -42,12 +42,21 @@ async function fetchMovieDetails(s, year = null) {
 
   // 1. Check in-memory cache
   if (inMemoryCache.has(cacheKey)) {
-    return inMemoryCache.get(cacheKey);
+    const movieDetails = inMemoryCache.get(cacheKey);
+    movieDetails.debugData = {
+      provider: 'InMemoryCache',
+      url: null
+    };
+    return movieDetails;
   }
 
   // 2. Check localStorage
   const localData = getFromLocalStorage(cacheKey);
   if (localData) {
+    localData.debugData = {
+      provider: 'localStorageCache',
+      url: null
+    };
     // Store in memory for faster future access
     inMemoryCache.set(cacheKey, localData);
     return localData;
@@ -112,14 +121,20 @@ async function fetchMovieDetails(s, year = null) {
       };
 
       // Store in both caches if all properties are not null
+      movieDetails.debugData = {
+        provider: 'OMDb API',
+        url: url,
+      };
       if (
         movieDetails.imdbId &&
         movieDetails.rating &&
         movieDetails.year &&
         movieDetails.title
       ) {
-        inMemoryCache.set(cacheKey, movieDetails);
-        setToLocalStorage(cacheKey, movieDetails);
+        const cacheData = { ...movieDetails};
+        delete cacheData.debugData;
+        inMemoryCache.set(cacheKey, cacheData);
+        setToLocalStorage(cacheKey, cacheData);
       }
 
       return movieDetails;
